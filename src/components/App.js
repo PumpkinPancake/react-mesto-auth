@@ -36,7 +36,6 @@ const ProtectedComponent = ({
 }) => {
   return (
     <>
-      <Header />
 
       <Main
         onEditAvatar={handleEditAvatarClick}
@@ -73,7 +72,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [emailValue, setEmailValue] = useState(null);
+  const [emailValue, setEmailValue] = useState("");
   const [isCheckStatusPopup, setIsCheckStatusPopup] = useState(false);
   const [imageCheckStatus, setImageCheckStatus] = useState("");
   const [titleCheckStatus, setTitleCheckStatus] = useState("");
@@ -86,6 +85,7 @@ function App() {
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
+        setEmailValue(email);
         navigate("/");
       })
       .catch((err) => {
@@ -108,6 +108,7 @@ function App() {
     auth.getContent(jwt).then((res) => {
       if (res) {
         handleLogin(res.email, res.password);
+        setEmailValue(res.email);
         navigate("/");
       }
     });
@@ -290,7 +291,7 @@ function App() {
               />
 
               <ProtectedRoute
-                component={ProtectedComponent}
+                element={ProtectedComponent}
                 loggedIn={loggedIn}
                 cards={cards}
                 handleEditAvatarClick={handleEditAvatarClick}
