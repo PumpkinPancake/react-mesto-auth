@@ -1,5 +1,6 @@
 import React from "react";
 import { CurrentUserContext } from "../context/CurrentUserContext";
+import Card from "./Card";
 
 export default function Main({
   onEditProfile,
@@ -35,6 +36,22 @@ export default function Main({
           className="profile__add-button"
           onClick={onAddPlace}
         ></button>
+      </section>
+      <section className="elements">
+        {cards.map((card) => {
+          return (
+            <Card
+              card={card}
+              key={card._id}
+              link={card.link}
+              name={card.name}
+              likes={card.likes}
+              onCardClick={onCardClick}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
+            ></Card>
+          );
+        })}
       </section>
     </main>
   );

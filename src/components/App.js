@@ -25,44 +25,6 @@ import * as auth from "../utils/auth";
 import Cross from "../Cross.svg";
 import CheckMark from "../Check_mark.svg";
 
-const ProtectedComponent = ({
-  cards,
-  handleEditAvatarClick,
-  handleEditProfileClick,
-  handleAddPlaceClick,
-  handleCardClick,
-  handleCardLike,
-  handleCardDelete,
-}) => {
-  return (
-    <>
-
-      <Main
-        onEditAvatar={handleEditAvatarClick}
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-      />
-
-      <section className="elements">
-        {cards.map((card) => {
-          return (
-            <Card
-              card={card}
-              key={card._id}
-              link={card.link}
-              name={card.name}
-              likes={card.likes}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            ></Card>
-          );
-        })}
-      </section>
-    </>
-  );
-};
-
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -74,8 +36,10 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [isCheckStatusPopup, setIsCheckStatusPopup] = useState(false);
-  const [imageCheckStatus, setImageCheckStatus] = useState("");
-  const [titleCheckStatus, setTitleCheckStatus] = useState("");
+  const [checkStatusData, setCheckStatusData] = useState({
+    image: "",
+    text: "",
+  });
 
   const navigate = useNavigate();
 
@@ -88,8 +52,12 @@ function App() {
         setEmailValue(email);
         navigate("/");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        setCheckStatusData({
+          image: Cross,
+          title: "Что-то пошло не так! Попробуйте еще раз.",
+        });
+        handleCheckStatusPopup();
       });
   };
 
@@ -105,13 +73,18 @@ function App() {
     if (!jwt) {
       return;
     }
-    auth.getContent(jwt).then((res) => {
-      if (res) {
-        handleLogin(res.email, res.password);
-        setEmailValue(res.email);
-        navigate("/");
-      }
-    });
+    auth
+      .getContent(jwt)
+      .then((res) => {
+        if (res) {
+          handleLogin(res.email, res.password);
+          setEmailValue(res.email);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -122,14 +95,18 @@ function App() {
     auth
       .register(email, password)
       .then(() => {
-        setImageCheckStatus(CheckMark);
-        setTitleCheckStatus("Вы успешно зарегистрировались!");
+        setCheckStatusData({
+          image: CheckMark,
+          title: "Вы успешно зарегистрировались!",
+        });
         setLoggedIn(true);
         navigate("/sign-in");
       })
       .catch((err) => {
-        setImageCheckStatus(Cross);
-        setTitleCheckStatus("Что-то пошло не так! Попробуйте ещё раз.");
+        setCheckStatusData({
+          image: Cross,
+          title: "Что-то пошло не так! Попробуйте еще раз.",
+        });
         console.log(err);
       })
       .finally(() => {
@@ -138,26 +115,30 @@ function App() {
   };
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then((userInfo) => {
+          setCurrentUser(userInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn) {
+      api
+        .getInitialCards()
+        .then((data) => {
+          setCards(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   function handleChangeUserInfo(name, about) {
     api
@@ -291,15 +272,15 @@ function App() {
               />
 
               <ProtectedRoute
-                element={ProtectedComponent}
+                element={Main}
                 loggedIn={loggedIn}
                 cards={cards}
-                handleEditAvatarClick={handleEditAvatarClick}
-                handleEditProfileClick={handleEditProfileClick}
-                handleAddPlaceClick={handleAddPlaceClick}
-                handleCardClick={handleCardClick}
-                handleCardLike={handleCardLike}
-                handleCardDelete={handleCardDelete}
+                onEditAvatarClick={handleEditAvatarClick}
+                onEditProfileClick={handleEditProfileClick}
+                onAddPlaceClick={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
               />
             </>
           }
@@ -347,8 +328,8 @@ function App() {
       <InfoToolTip
         isOpen={isCheckStatusPopup}
         onClose={closeAllPopups}
-        image={imageCheckStatus}
-        title={titleCheckStatus}
+        image={checkStatusData.image}
+        title={checkStatusData.title}
       />
       <Footer />
     </CurrentUserContext.Provider>
