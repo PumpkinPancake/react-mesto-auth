@@ -32,4 +32,4 @@
 * JSX
 * Route
 
-* <a href="https://pumpkinpancake.github.io/mesto-react/" target="blank">Проект Mesto </a> 
+* <a href="https://pumpkinpancake.github.io/mesto-react/" target="_blank">Проект Mesto </a> 
