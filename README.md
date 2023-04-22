@@ -32,4 +32,4 @@
 * JSX
 * Route
 
-* Ссылка на сайт: https://pumpkinpancake.github.io/mesto-react/
+* <a href="https://pumpkinpancake.github.io/mesto-react/" target="blank">Проект Mesto </a> 
