@@ -19,7 +19,7 @@ import { Register } from "./Register";
 import { Login } from "./Login";
 import { InfoToolTip } from "./InfoToolTip";
 import { PopupWithWarning } from "./PopupWithWarning";
-import { ProtectedRoute } from './ProtectedRoute';
+import { ProtectedRoute } from "./ProtectedRoute";
 import * as auth from "../utils/auth";
 
 import Cross from "../Cross.svg";
@@ -130,6 +130,9 @@ function App() {
         setImageCheckStatus(Cross);
         setTitleCheckStatus("Что-то пошло не так! Попробуйте ещё раз.");
         console.log(err);
+      })
+      .finally(() => {
+        handleCheckStatusPopup();
       });
   };
 
@@ -234,6 +237,10 @@ function App() {
     setIsEditAvatarPopupOpen(true);
   }
 
+  function handleCheckStatusPopup() {
+    setIsCheckStatusPopup(true);
+  }
+
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -336,7 +343,12 @@ function App() {
       ></PopupWithForm>
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-      <InfoToolTip onClose={closeAllPopups} img={isCheckStatusPopup} />
+      <InfoToolTip
+        isOpen={isCheckStatusPopup}
+        onClose={closeAllPopups}
+        image={imageCheckStatus}
+        title={titleCheckStatus}
+      />
       <Footer />
     </CurrentUserContext.Provider>
   );
