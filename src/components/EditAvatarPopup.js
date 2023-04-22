@@ -12,11 +12,9 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       avatar: updateAvatar.current.value,
     });
 
-    updateAvatar.current.value = '';
+    updateAvatar.current.value = "";
   }
 
-  
-  
   return (
     <PopupWithForm
       submitButtonText="Создать"

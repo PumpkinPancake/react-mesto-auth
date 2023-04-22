@@ -77,8 +77,8 @@ function App() {
       .getContent(jwt)
       .then((res) => {
         if (res) {
-          handleLogin(res.email, res.password);
-          setEmailValue(res.email);
+          setLoggedIn(true);
+          setEmailValue(res.data.email);
           navigate("/");
         }
       })

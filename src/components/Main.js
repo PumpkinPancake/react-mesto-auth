@@ -17,10 +17,7 @@ export default function Main({
     <main className="main">
       <section className="profile">
         <button className="profile__avatar-edit-btn" onClick={onEditAvatar}>
-          <img
-            className="profile__avatar"
-            src={currentUser.avatar}
-          ></img>
+          <img className="profile__avatar" src={currentUser.avatar}></img>
         </button>
         <div className="profile__info">
           <h1 className="profile__title">{currentUser.name}</h1>

@@ -1,8 +1,6 @@
 import React from "react";
 
-
 export default function PopupWithForm(props) {
-
   return props.isOpen ? (
     <div
       className={`popup popup_type_${props.name}${

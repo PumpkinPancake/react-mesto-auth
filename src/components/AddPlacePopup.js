@@ -22,7 +22,6 @@ export default function AddPlacePopup({
     newLink.current.value = "";
   }
 
-
   return (
     <PopupWithForm
       submitButtonText="Сохранить"
